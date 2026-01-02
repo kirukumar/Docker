@@ -1,0 +1,10 @@
+docker network create multi-container-network
+
+# Running Backend container
+docker run --name backendContainer --rm -p 80:80 -d -v logs:/app/logs -v "/Users/kiran.kumar/Personal-repo/Docker/Multi-container/multi-01-starting-setup/backend/:/app" -v /app/node_modules --network multi-container-network --env-file "./.env" backend:v1
+
+# Running frontend container
+docker run --name frontendContainer -v "/Users/kiran.kumar/Personal-repo/Docker/Multi-container/multi-01-starting-setup/frontend/src/:/app/src" --rm -p 3000:3000 -d frontend:v1
+
+# Running MongoDB container
+docker run --name mongoDBContainer --rm -d --network multi-container-network -e MONGO_INITDB_ROOT_USERNAME=mongoadmin -e MONGO_INITDB_ROOT_PASSWORD=secret -v mongoDBData:/data/db mongo
